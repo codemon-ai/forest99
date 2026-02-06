@@ -6,6 +6,7 @@ import { usePlayerStore } from '../../stores/playerStore';
 import { useControls } from '../../hooks/useControls';
 import { getTerrainHeight } from '../../utils/noise';
 import { resolveCollision } from '../../systems/CollisionSystem';
+import { updateSurvival } from '../../systems/SurvivalSystem';
 import { GAME_CONFIG } from '../../data/config';
 
 const MOVE_SPEED = 5;
@@ -22,6 +23,7 @@ export default function Player() {
   const { camera } = useThree();
   
   const position = usePlayerStore((state) => state.position);
+  const sanity = usePlayerStore((state) => state.sanity);
   const setPosition = usePlayerStore((state) => state.setPosition);
   const setIsMoving = usePlayerStore((state) => state.setIsMoving);
   const setIsRunning = usePlayerStore((state) => state.setIsRunning);
@@ -124,6 +126,14 @@ export default function Player() {
     camera.position.y = currentPos.y + cameraHeight;
     
     camera.lookAt(currentPos.x, currentPos.y + 1, currentPos.z);
+    
+    if (sanity <= 25) {
+      const shakeIntensity = ((25 - sanity) / 25) * 0.05;
+      camera.position.x += (Math.random() - 0.5) * shakeIntensity;
+      camera.position.y += (Math.random() - 0.5) * shakeIntensity;
+    }
+    
+    updateSurvival(delta, [currentPos.x, currentPos.y, currentPos.z]);
   });
 
   return (

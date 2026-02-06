@@ -1,5 +1,7 @@
 import { Canvas } from '@react-three/fiber';
 import World from './components/game/World';
+import HUD from './components/ui/HUD';
+import SanityEffect from './components/ui/SanityEffect';
 
 function App() {
   return (
@@ -10,6 +12,8 @@ function App() {
       >
         <World />
       </Canvas>
+      <HUD />
+      <SanityEffect />
     </div>
   );
 }
