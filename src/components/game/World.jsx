@@ -1,14 +1,6 @@
 import { OrbitControls } from '@react-three/drei';
 import { COLORS } from '../../data/config';
-
-function Ground() {
-  return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-      <planeGeometry args={[100, 100]} />
-      <meshStandardMaterial color={COLORS.grass} flatShading />
-    </mesh>
-  );
-}
+import Terrain from './Terrain';
 
 function TestCube() {
   return (
@@ -33,7 +25,7 @@ export default function World() {
       <color attach="background" args={[COLORS.sky_day]} />
       <fog attach="fog" args={[COLORS.sky_day, 30, 100]} />
        
-      <Ground />
+      <Terrain />
       <TestCube />
       
       <OrbitControls
