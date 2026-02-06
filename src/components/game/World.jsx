@@ -1,15 +1,10 @@
 import { OrbitControls } from '@react-three/drei';
 import { COLORS } from '../../data/config';
 import Terrain from './Terrain';
-
-function TestCube() {
-  return (
-    <mesh position={[0, 0.5, 0]} castShadow>
-      <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color={COLORS.tree_leaves} flatShading />
-    </mesh>
-  );
-}
+import Forest from './Forest';
+import Rocks from './Rocks';
+import Base from './Base';
+import AntNest from './AntNest';
 
 export default function World() {
   return (
@@ -26,7 +21,10 @@ export default function World() {
       <fog attach="fog" args={[COLORS.sky_day, 30, 100]} />
        
       <Terrain />
-      <TestCube />
+      <Forest />
+      <Rocks />
+      <Base />
+      <AntNest />
       
       <OrbitControls
         enablePan={true}
