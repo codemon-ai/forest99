@@ -31,7 +31,8 @@ export default function World() {
       />
       
       <color attach="background" args={[COLORS.sky_day]} />
-      
+      <fog attach="fog" args={[COLORS.sky_day, 30, 100]} />
+       
       <Ground />
       <TestCube />
       
