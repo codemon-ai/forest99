@@ -6,6 +6,7 @@ import Base from './Base';
 import AntNest from './AntNest';
 import Player from './Player';
 import DayNight from './DayNight';
+import MonsterSpawner from './MonsterSpawner';
 
 export default function World() {
   return (
@@ -20,6 +21,7 @@ export default function World() {
       <Rocks />
       <Base />
       <AntNest />
+      <MonsterSpawner />
       <Player />
     </>
   );

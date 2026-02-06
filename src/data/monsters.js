@@ -1,0 +1,57 @@
+export const MONSTER_TYPES = {
+  SNAKE: 'snake',
+  MONKEY: 'monkey',
+  BEAR: 'bear',
+  FIRE_ANT: 'fireAnt',
+  CULTIST: 'cultist',
+  GIANT_CENTIPEDE: 'giantCentipede',
+  BOSS_ANT: 'bossAnt',
+};
+
+export const MONSTER_STATS = {
+  [MONSTER_TYPES.SNAKE]: {
+    name: 'Snake',
+    hp: 30,
+    attack: 10,
+    speed: 3,
+    detectionRange: 10,
+    attackRange: 1.5,
+    color: '#6b8e23',
+  },
+  [MONSTER_TYPES.MONKEY]: {
+    name: 'Monkey',
+    hp: 50,
+    attack: 15,
+    speed: 5,
+    detectionRange: 15,
+    attackRange: 2,
+    color: '#a1887f',
+  },
+  [MONSTER_TYPES.BEAR]: {
+    name: 'Bear',
+    hp: 150,
+    attack: 30,
+    speed: 2,
+    detectionRange: 12,
+    attackRange: 2.5,
+    color: '#5d4037',
+  },
+  [MONSTER_TYPES.FIRE_ANT]: {
+    name: 'Fire Ant',
+    hp: 10,
+    attack: 5,
+    speed: 4,
+    detectionRange: 8,
+    attackRange: 1,
+    color: '#b71c1c',
+  },
+  [MONSTER_TYPES.CULTIST]: {
+    name: 'Cultist',
+    hp: 80,
+    attack: 20,
+    speed: 3,
+    detectionRange: 20,
+    attackRange: 2,
+    color: '#212121',
+  },
+};
