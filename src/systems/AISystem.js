@@ -77,3 +77,53 @@ export function updateMonsterAI(monster, playerPos, delta) {
     wanderTarget: newWanderTarget,
   };
 }
+
+export function updateCentipedeAI(centipede, playerPos, delta) {
+  const { position, speed } = centipede;
+  const BASE_RADIUS = 15;
+  
+  const distFromBase = Math.sqrt(position[0] ** 2 + position[2] ** 2);
+  
+  if (distFromBase < BASE_RADIUS) {
+    const fleeDir = [
+      position[0] / distFromBase,
+      position[2] / distFromBase,
+    ];
+    return {
+      ...centipede,
+      position: [
+        position[0] + fleeDir[0] * speed * delta,
+        position[1],
+        position[2] + fleeDir[1] * speed * delta,
+      ],
+      state: AI_STATES.FLEE,
+    };
+  }
+  
+  if (!centipede.wanderTarget || Math.random() < 0.005) {
+    centipede.wanderTarget = [
+      position[0] + (Math.random() - 0.5) * 30,
+      position[2] + (Math.random() - 0.5) * 30,
+    ];
+  }
+  
+  const [dx, dz] = [
+    centipede.wanderTarget[0] - position[0],
+    centipede.wanderTarget[1] - position[2],
+  ];
+  const dist = Math.sqrt(dx * dx + dz * dz);
+  
+  if (dist > 1) {
+    return {
+      ...centipede,
+      position: [
+        position[0] + (dx / dist) * speed * delta,
+        position[1],
+        position[2] + (dz / dist) * speed * delta,
+      ],
+      state: AI_STATES.WANDER,
+    };
+  }
+  
+  return centipede;
+}
