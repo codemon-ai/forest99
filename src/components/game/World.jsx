@@ -1,10 +1,10 @@
-import { OrbitControls } from '@react-three/drei';
 import { COLORS } from '../../data/config';
 import Terrain from './Terrain';
 import Forest from './Forest';
 import Rocks from './Rocks';
 import Base from './Base';
 import AntNest from './AntNest';
+import Player from './Player';
 
 export default function World() {
   return (
@@ -25,14 +25,7 @@ export default function World() {
       <Rocks />
       <Base />
       <AntNest />
-      
-      <OrbitControls
-        enablePan={true}
-        enableZoom={true}
-        enableRotate={true}
-        minDistance={5}
-        maxDistance={50}
-      />
+      <Player />
     </>
   );
 }

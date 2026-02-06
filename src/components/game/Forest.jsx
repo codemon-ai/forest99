@@ -1,7 +1,8 @@
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import LowPolyTree from '../lowpoly/LowPolyTree';
 import { GAME_CONFIG } from '../../data/config';
 import { getTerrainHeight, getRandomPosition } from '../../utils/noise';
+import { registerCollider, unregisterCollider } from '../../systems/CollisionSystem';
 
 const TREE_COUNT = 100;
 const BASE_RADIUS = 10;
@@ -33,6 +34,16 @@ export default function Forest() {
     
     return result;
   }, []);
+
+  useEffect(() => {
+    const ids = trees.map(tree => 
+      registerCollider(tree.position, 0.4 * tree.scale, 'tree')
+    );
+    
+    return () => {
+      ids.forEach(unregisterCollider);
+    };
+  }, [trees]);
 
   return (
     <group>
