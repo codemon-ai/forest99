@@ -1,9 +1,10 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { useFrame } from '@react-three/fiber';
 import Snake from './monsters/Snake';
 import Monkey from './monsters/Monkey';
 import Bear from './monsters/Bear';
 import FireAnt from './monsters/FireAnt';
+import MonsterWrapper from './MonsterWrapper';
 import { useGameStore } from '../../stores/gameStore';
 import { usePlayerStore } from '../../stores/playerStore';
 import { MONSTER_TYPES, MONSTER_STATS } from '../../data/monsters';
@@ -16,10 +17,10 @@ const SPAWN_INTERVAL = 10;
 const BASE_RADIUS = 15;
 
 const MONSTER_COMPONENTS = {
-  [MONSTER_TYPES.SNAKE]: Snake,
-  [MONSTER_TYPES.MONKEY]: Monkey,
-  [MONSTER_TYPES.BEAR]: Bear,
-  [MONSTER_TYPES.FIRE_ANT]: FireAnt,
+  [MONSTER_TYPES.SNAKE]: { component: Snake, healthBarHeight: 1.5 },
+  [MONSTER_TYPES.MONKEY]: { component: Monkey, healthBarHeight: 2 },
+  [MONSTER_TYPES.BEAR]: { component: Bear, healthBarHeight: 3 },
+  [MONSTER_TYPES.FIRE_ANT]: { component: FireAnt, healthBarHeight: 0.8 },
 };
 
 export default function MonsterSpawner() {
@@ -27,6 +28,10 @@ export default function MonsterSpawner() {
   const isNight = useGameStore((state) => state.isNight);
   const playerPosition = usePlayerStore((state) => state.position);
   const spawnTimer = useRef(0);
+  
+  const handleMonsterDeath = useCallback((id) => {
+    setMonsters((prev) => prev.filter((m) => m.id !== id));
+  }, []);
   
   useFrame((_, delta) => {
     spawnTimer.current += delta;
@@ -57,7 +62,7 @@ export default function MonsterSpawner() {
         position[1] = height;
         
         const newMonster = {
-          id: Date.now() + Math.random(),
+          id: `monster-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
           type,
           position,
           stats: MONSTER_STATS[type],
@@ -78,14 +83,22 @@ export default function MonsterSpawner() {
   return (
     <group>
       {monsters.map((monster) => {
-        const Component = MONSTER_COMPONENTS[monster.type];
-        if (!Component) return null;
+        const config = MONSTER_COMPONENTS[monster.type];
+        if (!config) return null;
+        
+        const Component = config.component;
         
         return (
-          <Component
+          <MonsterWrapper
             key={monster.id}
+            id={monster.id}
+            type={monster.type}
             position={monster.position}
-          />
+            onDeath={handleMonsterDeath}
+            healthBarHeight={config.healthBarHeight}
+          >
+            <Component position={[0, 0, 0]} />
+          </MonsterWrapper>
         );
       })}
     </group>

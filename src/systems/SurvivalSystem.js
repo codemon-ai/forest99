@@ -9,7 +9,7 @@ const BASE_RADIUS = 10;
 
 let lastHungerTime = 0;
 
-export function updateSurvival(delta, playerPosition) {
+export function updateSurvival(delta, playerPosition, eventSanityDrain = 0) {
   const { 
     hunger, 
     health,
@@ -31,14 +31,22 @@ export function updateSurvival(delta, playerPosition) {
     damage(STARVATION_DAMAGE * delta);
   }
   
+  let sanityDrain = 0;
+  
   if (isNight) {
     const distFromBase = Math.sqrt(
       playerPosition[0] ** 2 + playerPosition[2] ** 2
     );
     
     if (distFromBase > BASE_RADIUS) {
-      decreaseSanity(SANITY_DECREASE_RATE * delta);
+      sanityDrain += SANITY_DECREASE_RATE;
     }
+  }
+  
+  sanityDrain += eventSanityDrain;
+  
+  if (sanityDrain > 0) {
+    decreaseSanity(sanityDrain * delta);
   }
 }
 

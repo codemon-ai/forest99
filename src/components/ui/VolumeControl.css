@@ -1,0 +1,136 @@
+.volume-control {
+  background: rgba(20, 20, 20, 0.9);
+  border: 2px solid #4a7c59;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+  font-family: 'Arial', sans-serif;
+}
+
+.volume-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.volume-header h3 {
+  margin: 0;
+  color: #a8d5ba;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.mute-btn {
+  background: rgba(74, 124, 89, 0.6);
+  border: 1px solid #4a7c59;
+  color: #a8d5ba;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.2s ease;
+}
+
+.mute-btn:hover {
+  background: rgba(74, 124, 89, 0.9);
+  border-color: #a8d5ba;
+}
+
+.mute-btn.muted {
+  background: rgba(200, 100, 100, 0.6);
+  border-color: #c86464;
+  color: #ff9999;
+}
+
+.volume-sliders {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.slider-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.slider-group label {
+  color: #a8d5ba;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.slider-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.volume-slider {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(74, 124, 89, 0.3);
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #a8d5ba;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 4px rgba(168, 213, 186, 0.5);
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+  background: #d4f1e4;
+  box-shadow: 0 0 8px rgba(168, 213, 186, 0.8);
+}
+
+.volume-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #a8d5ba;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 4px rgba(168, 213, 186, 0.5);
+}
+
+.volume-slider::-moz-range-thumb:hover {
+  background: #d4f1e4;
+  box-shadow: 0 0 8px rgba(168, 213, 186, 0.8);
+}
+
+.volume-slider::-webkit-slider-runnable-track {
+  background: rgba(74, 124, 89, 0.3);
+  height: 6px;
+  border-radius: 3px;
+}
+
+.volume-slider::-moz-range-track {
+  background: transparent;
+  border: none;
+}
+
+.volume-slider:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.volume-value {
+  color: #a8d5ba;
+  font-size: 12px;
+  min-width: 35px;
+  text-align: right;
+  font-weight: 500;
+}

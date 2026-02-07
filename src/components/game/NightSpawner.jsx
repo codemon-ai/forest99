@@ -1,7 +1,9 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { useFrame } from '@react-three/fiber';
 import GiantCentipede from './monsters/GiantCentipede';
+import MonsterWrapper from './MonsterWrapper';
 import { useGameStore } from '../../stores/gameStore';
+import { MONSTER_TYPES } from '../../data/monsters';
 import { updateCentipedeAI } from '../../systems/AISystem';
 import { getTerrainHeight, getRandomPosition } from '../../utils/noise';
 import { GAME_CONFIG } from '../../data/config';
@@ -13,6 +15,10 @@ export default function NightSpawner() {
   const isNight = useGameStore((state) => state.isNight);
   const spawnedThisNight = useRef(false);
   
+  const handleCentipedeDeath = useCallback((id) => {
+    setCentipedes((prev) => prev.filter((c) => c.id !== id));
+  }, []);
+  
   useEffect(() => {
     if (isNight && !spawnedThisNight.current) {
       spawnedThisNight.current = true;
@@ -23,7 +29,7 @@ export default function NightSpawner() {
         const height = getTerrainHeight(pos[0], pos[2]);
         
         newCentipedes.push({
-          id: Date.now() + i,
+          id: `centipede-${Date.now()}-${i}`,
           position: [pos[0], height, pos[2]],
           speed: 4,
           wanderTarget: null,
@@ -52,11 +58,16 @@ export default function NightSpawner() {
   return (
     <group>
       {centipedes.map((centipede) => (
-        <GiantCentipede
+        <MonsterWrapper
           key={centipede.id}
+          id={centipede.id}
+          type={MONSTER_TYPES.GIANT_CENTIPEDE}
           position={centipede.position}
-          isInvincible={true}
-        />
+          onDeath={handleCentipedeDeath}
+          healthBarHeight={2.5}
+        >
+          <GiantCentipede position={[0, 0, 0]} />
+        </MonsterWrapper>
       ))}
     </group>
   );

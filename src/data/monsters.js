@@ -6,6 +6,7 @@ export const MONSTER_TYPES = {
   CULTIST: 'cultist',
   GIANT_CENTIPEDE: 'giantCentipede',
   BOSS_ANT: 'bossAnt',
+  FOREST_GUARDIAN: 'forestGuardian',
 };
 
 export const MONSTER_STATS = {
@@ -53,5 +54,24 @@ export const MONSTER_STATS = {
     detectionRange: 20,
     attackRange: 2,
     color: '#212121',
+  },
+  [MONSTER_TYPES.GIANT_CENTIPEDE]: {
+    name: 'Giant Centipede',
+    hp: 500,
+    attack: 40,
+    speed: 4,
+    detectionRange: 25,
+    attackRange: 3,
+    color: '#4a148c',
+  },
+  [MONSTER_TYPES.FOREST_GUARDIAN]: {
+    name: '숲의 수호자',
+    hp: 3000,
+    attack: 50,
+    speed: 2,
+    detectionRange: 50,
+    attackRange: 5,
+    color: '#2e7d32',
+    isBoss: true,
   },
 };

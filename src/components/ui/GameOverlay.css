@@ -1,0 +1,133 @@
+.game-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.game-overlay.victory {
+  background: radial-gradient(ellipse at center, rgba(46, 125, 50, 0.9) 0%, rgba(0, 0, 0, 0.95) 100%);
+}
+
+.game-overlay.game-over {
+  background: radial-gradient(ellipse at center, rgba(139, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.95) 100%);
+}
+
+.overlay-content {
+  text-align: center;
+  color: #fff;
+  padding: 40px;
+  animation: slideUp 0.5s ease 0.2s both;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.victory-icon,
+.gameover-icon {
+  font-size: 80px;
+  margin-bottom: 20px;
+  animation: bounce 1s ease infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.overlay-content h1 {
+  font-size: 48px;
+  margin: 0 0 10px 0;
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+}
+
+.victory h1 {
+  color: #ffd700;
+}
+
+.game-over h1 {
+  color: #ff4444;
+}
+
+.subtitle {
+  font-size: 20px;
+  opacity: 0.9;
+  margin-bottom: 30px;
+}
+
+.stats {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin: 30px 0;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px 30px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.stat-label {
+  font-size: 14px;
+  opacity: 0.7;
+  margin-bottom: 5px;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: bold;
+  color: #ffd700;
+}
+
+.victory-message {
+  font-size: 18px;
+  line-height: 1.6;
+  opacity: 0.9;
+  margin: 30px 0;
+}
+
+.restart-btn {
+  padding: 15px 40px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  background: linear-gradient(to bottom, #4caf50, #2e7d32);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.restart-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.game-over .restart-btn {
+  background: linear-gradient(to bottom, #f44336, #c62828);
+}

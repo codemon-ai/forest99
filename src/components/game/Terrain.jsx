@@ -13,7 +13,7 @@ export default function Terrain() {
     for (let i = 0; i < positions.count; i++) {
       const x = positions.getX(i);
       const y = positions.getY(i);
-      const height = getTerrainHeight(x, y);
+      const height = getTerrainHeight(x, -y);
       positions.setZ(i, height);
     }
     

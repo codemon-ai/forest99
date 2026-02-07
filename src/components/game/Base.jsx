@@ -1,8 +1,11 @@
 import { COLORS } from '../../data/config';
+import { getTerrainHeight } from '../../utils/noise';
 
 export default function Base() {
+  const terrainY = getTerrainHeight(0, 0);
+  
   return (
-    <group position={[0, 0, 0]}>
+    <group position={[0, terrainY, 0]}>
       <mesh position={[0, 0.05, 0]} receiveShadow>
         <boxGeometry args={[6, 0.1, 6]} />
         <meshStandardMaterial color={COLORS.dirt} flatShading />

@@ -1,11 +1,15 @@
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import LowPolyRock from '../lowpoly/LowPolyRock';
 import { GAME_CONFIG } from '../../data/config';
 import { getTerrainHeight, getRandomPosition } from '../../utils/noise';
+import { useResourceStore } from '../../stores/resourceStore';
 
 const ROCK_COUNT = 30;
 
 export default function Rocks() {
+  const registerResource = useResourceStore((state) => state.registerResource);
+  const unregisterResource = useResourceStore((state) => state.unregisterResource);
+  
   const rocks = useMemo(() => {
     const result = [];
     const mapSize = GAME_CONFIG.worldSize;
@@ -17,11 +21,23 @@ export default function Rocks() {
       
       const scale = 0.5 + Math.random() * 1.5;
       
-      result.push({ position, scale, key: i });
+      result.push({ position, scale, key: i, id: `rock-${i}` });
     }
     
     return result;
   }, []);
+  
+  useEffect(() => {
+    rocks.forEach(rock => {
+      registerResource(rock.id, 'rock', rock.position);
+    });
+    
+    return () => {
+      rocks.forEach(rock => {
+        unregisterResource(rock.id);
+      });
+    };
+  }, [rocks, registerResource, unregisterResource]);
 
   return (
     <group>

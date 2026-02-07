@@ -1,0 +1,25 @@
+.joystick-base {
+  position: fixed;
+  bottom: 80px;
+  left: 40px;
+  width: 120px;
+  height: 120px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  z-index: 1000;
+  touch-action: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.joystick-knob {
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}

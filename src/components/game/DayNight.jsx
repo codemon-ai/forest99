@@ -2,11 +2,13 @@ import { useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useGameStore } from '../../stores/gameStore';
+import { useEventStore } from '../../stores/eventStore';
 import { COLORS, GAME_CONFIG } from '../../data/config';
 
 const DAY_DURATION = GAME_CONFIG.dayDuration;
 const NIGHT_DURATION = GAME_CONFIG.nightDuration;
 const TOTAL_CYCLE = DAY_DURATION + NIGHT_DURATION;
+const EVENT_CHECK_INTERVAL = 15;
 
 function lerp(a, b, t) {
   return a + (b - a) * t;
@@ -24,14 +26,23 @@ export default function DayNight() {
   const { scene } = useThree();
   
   const timeOfDay = useGameStore((state) => state.timeOfDay);
+  const day = useGameStore((state) => state.day);
   const setTimeOfDay = useGameStore((state) => state.setTimeOfDay);
   const setIsNight = useGameStore((state) => state.setIsNight);
   const incrementDay = useGameStore((state) => state.incrementDay);
   const isNight = useGameStore((state) => state.isNight);
+  const isPaused = useGameStore((state) => state.isPaused);
+  
+  const updateEvent = useEventStore((state) => state.updateEvent);
+  const tryTriggerEvent = useEventStore((state) => state.tryTriggerEvent);
+  const currentEvent = useEventStore((state) => state.currentEvent);
   
   const wasNight = useRef(false);
+  const lastEventCheck = useRef(0);
   
   useFrame((_, delta) => {
+    if (isPaused) return;
+    
     const newTime = (timeOfDay + delta) % TOTAL_CYCLE;
     setTimeOfDay(newTime);
     
@@ -42,6 +53,14 @@ export default function DayNight() {
       incrementDay();
     }
     wasNight.current = currentIsNight;
+    
+    updateEvent(delta);
+    
+    lastEventCheck.current += delta;
+    if (lastEventCheck.current >= EVENT_CHECK_INTERVAL && !currentEvent) {
+      lastEventCheck.current = 0;
+      tryTriggerEvent(day, isNight);
+    }
     
     let lightIntensity, ambientIntensity, lightColor, skyColor, fogNear, fogFar;
     

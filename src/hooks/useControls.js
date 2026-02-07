@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useTouchStore } from '../stores/touchStore';
 
 export function useControls() {
   const keys = useRef({
@@ -8,7 +9,12 @@ export function useControls() {
     right: false,
     jump: false,
     run: false,
+    interact: false,
   });
+
+  const joystickInput = useTouchStore((state) => state.joystickInput);
+  const touchButtons = useTouchStore((state) => state.touchButtons);
+  const JOYSTICK_THRESHOLD = 0.3;
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -35,6 +41,9 @@ export function useControls() {
         case 'ShiftLeft':
         case 'ShiftRight':
           keys.current.run = true;
+          break;
+        case 'KeyE':
+          keys.current.interact = true;
           break;
       }
     };
@@ -64,6 +73,9 @@ export function useControls() {
         case 'ShiftRight':
           keys.current.run = false;
           break;
+        case 'KeyE':
+          keys.current.interact = false;
+          break;
       }
     };
 
@@ -76,5 +88,16 @@ export function useControls() {
     };
   }, []);
 
-  return keys;
+  return {
+    current: {
+      forward: keys.current.forward || joystickInput.y < -JOYSTICK_THRESHOLD,
+      backward: keys.current.backward || joystickInput.y > JOYSTICK_THRESHOLD,
+      left: keys.current.left || joystickInput.x < -JOYSTICK_THRESHOLD,
+      right: keys.current.right || joystickInput.x > JOYSTICK_THRESHOLD,
+      jump: keys.current.jump || touchButtons.jump,
+      run: keys.current.run,
+      interact: keys.current.interact || touchButtons.interact,
+    },
+    touchButtons,
+  };
 }
