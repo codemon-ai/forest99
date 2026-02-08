@@ -44,4 +44,30 @@ npm install i18next react-i18next
 ```
 
 ## Status
-- [ ] 미구현
+- [x] 구현 완료 (2026-02-08)
+
+## Implementation Notes
+
+### Created Files
+- `src/i18n/index.js` - i18n 설정 및 언어 변경 함수
+- `src/i18n/locales/ko.json` - 한국어 번역 (200+ 항목)
+- `src/i18n/locales/en.json` - 영어 번역 (200+ 항목)
+
+### Modified Files
+- `src/App.jsx` - i18n import
+- `src/components/ui/MainMenu.jsx` - 번역 적용, 언어 선택 UI
+- `src/components/ui/MainMenu.css` - 언어 선택 스타일
+
+### Translation Coverage
+- UI: 메뉴, 버튼, HUD
+- 아이템: 이름 (22개)
+- 무기: 이름 (6개)
+- 몬스터: 이름 (10개)
+- 이벤트: 이름 + 설명 (9개)
+- 튜토리얼: 전체 텍스트
+- 업적: 전체 텍스트 (12개)
+- 게임오버/승리 화면
+
+### Dependencies Added
+- `i18next`
+- `react-i18next`

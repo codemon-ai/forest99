@@ -1,7 +1,5 @@
 # Forest 99 - Master Implementation Plan
 
-> **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
-
 **Goal:** Build "숲에서 보낸 99일 밤" (99 Nights in the Forest) - a Three.js + React survival game with low-poly graphics
 
 **Architecture:** React SPA with React Three Fiber for 3D rendering, Zustand for state management, component-based game systems

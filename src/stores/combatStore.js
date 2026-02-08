@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { MONSTER_STATS } from '../data/monsters';
 import { playSound } from '../systems/SoundManager';
+import { useAchievementStore } from './achievementStore';
+import { useGameStore } from './gameStore';
 
 export const useCombatStore = create((set, get) => ({
   monsters: {},
@@ -33,45 +35,59 @@ export const useCombatStore = create((set, get) => ({
     }
   })),
   
-  damageMonster: (id, damage, attackerPosition) => {
-    const state = get();
-    const monster = state.monsters[id];
-    if (!monster || monster.isDead) return false;
-    
-    const newHp = Math.max(0, monster.hp - damage);
-    const isDead = newHp <= 0;
-    
-    const damageNumber = {
-      id: `${id}-${Date.now()}`,
-      value: damage,
-      position: [...monster.position],
-      createdAt: Date.now(),
-    };
-    
-    set((state) => ({
-      monsters: {
-        ...state.monsters,
-        [id]: { ...state.monsters[id], hp: newHp, isHit: true, isDead }
-      },
-      damageNumbers: [...state.damageNumbers, damageNumber]
-    }));
-    
-    playSound('attack_hit');
-    if (isDead) {
-      playSound('monster_death');
-    }
-    
-    setTimeout(() => {
-      set((state) => ({
-        monsters: {
-          ...state.monsters,
-          [id]: state.monsters[id] ? { ...state.monsters[id], isHit: false } : state.monsters[id]
-        }
-      }));
-    }, 200);
-    
-    return isDead;
-  },
+   damageMonster: (id, damage, attackerPosition) => {
+     const state = get();
+     const monster = state.monsters[id];
+     if (!monster || monster.isDead) return false;
+     
+     const newHp = Math.max(0, monster.hp - damage);
+     const isDead = newHp <= 0;
+     
+     const damageNumber = {
+       id: `${id}-${Date.now()}`,
+       value: damage,
+       position: [...monster.position],
+       createdAt: Date.now(),
+     };
+     
+     set((state) => ({
+       monsters: {
+         ...state.monsters,
+         [id]: { ...state.monsters[id], hp: newHp, isHit: true, isDead }
+       },
+       damageNumbers: [...state.damageNumbers, damageNumber]
+     }));
+     
+     playSound('attack_hit');
+     if (isDead) {
+       playSound('monster_death');
+       
+       // 몬스터 킬 카운트
+       useAchievementStore.getState().incrementStat('monstersKilled');
+       
+       // 밤에 킬한 경우
+       const isNight = useGameStore.getState().isNight;
+       if (isNight) {
+         useAchievementStore.getState().incrementStat('nightKills');
+       }
+       
+       // 보스 킬
+       if (monster.type === 'boss') {
+         useAchievementStore.getState().updateStat('bossDefeated', true);
+       }
+     }
+     
+     setTimeout(() => {
+       set((state) => ({
+         monsters: {
+           ...state.monsters,
+           [id]: state.monsters[id] ? { ...state.monsters[id], isHit: false } : state.monsters[id]
+         }
+       }));
+     }, 200);
+     
+     return isDead;
+   },
   
   clearDamageNumber: (numberId) => set((state) => ({
     damageNumbers: state.damageNumbers.filter(d => d.id !== numberId)

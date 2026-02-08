@@ -5,6 +5,9 @@ export const EVENT_TYPES = {
   RESOURCE_BLOOM: 'resourceBloom',
   FOG: 'fog',
   EARTHQUAKE: 'earthquake',
+  FULL_MOON: 'fullMoon',
+  FOREST_BLESSING: 'forestBlessing',
+  SHADOW_FOG: 'shadowFog',
 };
 
 export const EVENTS = {
@@ -88,6 +91,51 @@ export const EVENTS = {
     },
     minDay: 10,
     chance: 0.08,
+  },
+  [EVENT_TYPES.FULL_MOON]: {
+    id: EVENT_TYPES.FULL_MOON,
+    name: '보름달',
+    description: '밝은 보름달이 떴습니다. 몬스터가 강해지지만 드롭률이 증가합니다.',
+    icon: '🌕',
+    duration: 60,
+    effects: {
+      monsterDamageMultiplier: 1.3,
+      monsterHpMultiplier: 1.2,
+      dropRateMultiplier: 2.0,
+      visibilityRange: 40,
+    },
+    minDay: 15,
+    chance: 0.1,
+    nightOnly: true,
+  },
+  [EVENT_TYPES.FOREST_BLESSING]: {
+    id: EVENT_TYPES.FOREST_BLESSING,
+    name: '숲의 축복',
+    description: '숲의 정령이 축복을 내립니다. 자원이 빠르게 재생됩니다.',
+    icon: '🌿',
+    duration: 60,
+    effects: {
+      resourceMultiplier: 2.0,
+      resourceRegenMultiplier: 2.0,
+      sanityRegenMultiplier: 1.5,
+    },
+    minDay: 10,
+    chance: 0.08,
+  },
+  [EVENT_TYPES.SHADOW_FOG]: {
+    id: EVENT_TYPES.SHADOW_FOG,
+    name: '안개 속 그림자',
+    description: '짙은 안개 속에서 무언가 다가옵니다...',
+    icon: '👁️',
+    duration: 30,
+    effects: {
+      visibilityRange: 8,
+      spawnMiniBoss: true,
+      sanityDrain: 4,
+    },
+    minDay: 25,
+    chance: 0.06,
+    nightOnly: true,
   },
 };
 

@@ -41,4 +41,28 @@ LOD, 청크 로딩, 인스턴싱으로 성능 향상. 특히 모바일 최적화
 | `vite.config.js` | 번들 최적화 |
 
 ## Status
-- [ ] 미구현
+- [x] 구현 완료 (2026-02-08)
+
+## Implementation Notes
+
+### Created Files
+- `src/systems/PerformanceManager.js` - 성능 관리 시스템
+  - QUALITY_PRESETS (LOW/MEDIUM/HIGH)
+  - 자동 품질 조절 (FPS 기반)
+  - 디바이스 감지 (모바일/저사양)
+- `src/components/game/InstancedForest.jsx` - 인스턴스드 렌더링 나무
+
+### Modified Files
+- `vite.config.js` - 코드 스플리팅 (manualChunks)
+  - vendor-three (666KB)
+  - vendor-react-three (385KB)
+  - vendor-postprocessing (70KB)
+  - vendor-audio (36KB)
+- `src/components/game/World.jsx` - InstancedForest 사용
+- `src/components/effects/PostProcessing.jsx` - 품질 설정 적용
+
+### Performance Improvements
+- 코드 스플리팅으로 초기 로드 최적화
+- 인스턴스드 렌더링으로 드로우콜 감소
+- 거리 기반 컬링 (drawDistance)
+- 품질 프리셋 (모바일/데스크톱)

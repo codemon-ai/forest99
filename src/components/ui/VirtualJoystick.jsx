@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { useTouchStore } from '../../stores/touchStore';
+import { useTutorialStore } from '../../stores/tutorialStore';
 import './VirtualJoystick.css';
 
 export default function VirtualJoystick() {
@@ -9,6 +10,11 @@ export default function VirtualJoystick() {
   
   const setJoystickInput = useTouchStore((state) => state.setJoystickInput);
   const resetJoystick = useTouchStore((state) => state.resetJoystick);
+  
+  const highlightTarget = useTutorialStore((state) => {
+    const step = state.getCurrentStep?.();
+    return step?.highlight?.mobile;
+  });
   
   const handleTouchStart = (e) => {
     e.preventDefault();
@@ -48,7 +54,7 @@ export default function VirtualJoystick() {
   return (
     <div 
       ref={baseRef}
-      className="joystick-base"
+      className={`joystick-base ${highlightTarget === 'joystick' ? 'tutorial-highlight' : ''}`}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}

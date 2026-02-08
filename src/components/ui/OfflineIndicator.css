@@ -1,0 +1,61 @@
+.offline-indicator {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 24px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 9999;
+  animation: slideUp 0.3s ease-out;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.offline-indicator.offline {
+  background: linear-gradient(135deg, #ff6b35, #f7931e);
+  color: white;
+}
+
+.offline-indicator.online {
+  background: linear-gradient(135deg, #4caf50, #8bc34a);
+  color: white;
+  animation: slideUp 0.3s ease-out, fadeOut 0.5s ease-out 2.5s forwards;
+}
+
+.offline-icon {
+  font-size: 18px;
+}
+
+.offline-text {
+  white-space: nowrap;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .offline-indicator {
+    bottom: 80px;
+    font-size: 12px;
+    padding: 10px 16px;
+  }
+}

@@ -212,6 +212,55 @@ kbd {
   background: #555;
 }
 
+.language-modal {
+  max-width: 350px;
+}
+
+.language-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.language-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 15px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.language-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.language-btn.active {
+  background: rgba(76, 175, 80, 0.2);
+  border-color: #4caf50;
+}
+
+.lang-flag {
+  font-size: 24px;
+}
+
+.lang-name {
+  flex: 1;
+  text-align: left;
+}
+
+.lang-check {
+  color: #4caf50;
+  font-size: 20px;
+}
+
 /* Tablet (max-width: 1024px) */
 @media (max-width: 1024px) {
   .game-title h1 {

@@ -1,0 +1,151 @@
+.tutorial-overlay {
+  position: fixed;
+  bottom: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1001;
+  pointer-events: auto;
+}
+
+.tutorial-content {
+  background: rgba(0, 0, 0, 0.9);
+  padding: 20px 30px;
+  border-radius: 12px;
+  border: 2px solid #ffd700;
+  max-width: 400px;
+  text-align: center;
+}
+
+.tutorial-title {
+  color: #ffd700;
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0 0 10px 0;
+}
+
+.tutorial-description {
+  color: white;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 0 15px 0;
+}
+
+.tutorial-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.tutorial-btn {
+  padding: 8px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  border: none;
+  transition: transform 0.1s, opacity 0.2s;
+}
+
+.tutorial-btn:hover {
+  opacity: 0.9;
+}
+
+.tutorial-btn:active {
+  transform: scale(0.95);
+}
+
+.tutorial-next {
+  background: #ffd700;
+  color: #1a1a1a;
+}
+
+.tutorial-skip {
+  background: transparent;
+  border: 1px solid #666;
+  color: #999;
+}
+
+.tutorial-progress {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.progress-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #444;
+  transition: background 0.3s;
+}
+
+.progress-dot.active {
+  background: #ffd700;
+}
+
+/* Highlight Animation */
+.tutorial-highlight {
+  position: relative;
+  z-index: 1000;
+  animation: highlight-pulse 1.5s infinite;
+}
+
+@keyframes highlight-pulse {
+  0%, 100% { 
+    box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.4); 
+  }
+  50% { 
+    box-shadow: 0 0 0 8px rgba(255, 215, 0, 0.8); 
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .tutorial-overlay {
+    bottom: 200px;
+    left: 10px;
+    right: 10px;
+    transform: none;
+  }
+  
+  .tutorial-content {
+    max-width: 100%;
+    padding: 15px 20px;
+  }
+  
+  .tutorial-title {
+    font-size: 16px;
+  }
+  
+  .tutorial-description {
+    font-size: 13px;
+  }
+  
+  .tutorial-btn {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tutorial-overlay {
+    bottom: 180px;
+  }
+  
+  .tutorial-content {
+    padding: 12px 16px;
+  }
+  
+  .tutorial-title {
+    font-size: 14px;
+  }
+  
+  .tutorial-description {
+    font-size: 12px;
+  }
+  
+  .tutorial-btn {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+}

@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { playSound } from '../systems/SoundManager';
+import { useTutorialStore } from './tutorialStore';
+import { useAchievementStore } from './achievementStore';
 
 export const useResourceStore = create((set, get) => ({
   resources: {},
@@ -36,9 +38,11 @@ export const useResourceStore = create((set, get) => ({
       }
     }));
     
-    playSound(resource.type === 'tree' ? 'chop_wood' : 'mine_rock');
-    
-    setTimeout(() => {
+      playSound(resource.type === 'tree' ? 'chop_wood' : 'mine_rock');
+      useTutorialStore.getState().completeCondition('resourceHarvested');
+      useAchievementStore.getState().incrementStat('resourcesGathered');
+     
+     setTimeout(() => {
       set((state) => ({
         resources: {
           ...state.resources,

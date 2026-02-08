@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { ITEMS, RECIPES, MONSTER_DROPS, RESOURCE_DROPS } from '../data/items';
 import { playSound } from '../systems/SoundManager';
+import { useTutorialStore } from './tutorialStore';
+import { useAchievementStore } from './achievementStore';
 
 const INVENTORY_SIZE = 20;
 
@@ -17,6 +19,10 @@ export const useInventoryStore = create((set, get) => ({
       isOpen: !state.isOpen,
       isCraftingOpen: state.isOpen ? false : state.isCraftingOpen,
     }));
+    
+    if (!wasOpen) {
+      useTutorialStore.getState().completeCondition('inventoryOpened');
+    }
   },
   
   toggleCrafting: () => {
@@ -26,6 +32,10 @@ export const useInventoryStore = create((set, get) => ({
       isCraftingOpen: !state.isCraftingOpen,
       isOpen: state.isCraftingOpen ? false : state.isOpen,
     }));
+    
+    if (!wasOpen) {
+      useTutorialStore.getState().completeCondition('craftingOpened');
+    }
   },
   
   closeAll: () => set({ isOpen: false, isCraftingOpen: false, selectedSlot: null }),
@@ -113,18 +123,19 @@ export const useInventoryStore = create((set, get) => ({
     );
   },
   
-  craft: (recipeId) => {
-    const recipe = RECIPES[recipeId];
-    if (!recipe || !get().canCraft(recipeId)) return false;
-    
-    recipe.ingredients.forEach(({ itemId, amount }) => {
-      get().removeItem(itemId, amount);
-    });
-    
-    get().addItem(recipe.result, 1);
-    playSound('craft_complete');
-    return true;
-  },
+   craft: (recipeId) => {
+     const recipe = RECIPES[recipeId];
+     if (!recipe || !get().canCraft(recipeId)) return false;
+     
+     recipe.ingredients.forEach(({ itemId, amount }) => {
+       get().removeItem(itemId, amount);
+     });
+     
+     get().addItem(recipe.result, 1);
+     playSound('craft_complete');
+     useAchievementStore.getState().incrementStat('itemsCrafted');
+     return true;
+   },
   
   useItem: (slotIndex) => {
     const state = get();

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { SaveSystem } from '../systems/SaveSystem';
+import { useAchievementStore } from './achievementStore';
 
 export const GAME_STATE = {
   MENU: 'menu',
@@ -20,7 +21,11 @@ export const useGameStore = create((set, get) => ({
   bossDefeated: false,
   
   incrementDay: () => {
-    set((state) => ({ day: state.day + 1 }));
+    set((state) => {
+      const newDay = state.day + 1;
+      useAchievementStore.getState().updateStat('daysSurvived', newDay);
+      return { day: newDay };
+    });
     setTimeout(() => {
       SaveSystem.saveGame();
     }, 100);

@@ -8,6 +8,7 @@ import { useCombatStore } from '../../stores/combatStore';
 import { useResourceStore } from '../../stores/resourceStore';
 import { useInventoryStore } from '../../stores/inventoryStore';
 import { useEventStore } from '../../stores/eventStore';
+import { useTutorialStore } from '../../stores/tutorialStore';
 import { useControls } from '../../hooks/useControls';
 import { useDeviceDetect } from '../../hooks/useDeviceDetect';
 import { getTerrainHeight } from '../../utils/noise';
@@ -67,11 +68,21 @@ export default function Player() {
   const [isRunningLocal, setIsRunningLocal] = useState(false);
   const [isHarvesting, setIsHarvesting] = useState(false);
   
+  const hasMoved = useRef(false);
+  const hasRotated = useRef(false);
+  const hasJumped = useRef(false);
+  const hasAttacked = useRef(false);
+  
   const handleAttack = useCallback(() => {
     if (!groupRef.current) return;
     
     const didAttack = attack();
     if (!didAttack) return;
+    
+    if (!hasAttacked.current) {
+      hasAttacked.current = true;
+      useTutorialStore.getState().completeCondition('playerAttacked');
+    }
     
     const pos = groupRef.current.position;
     const playerPos = [pos.x, pos.y, pos.z];
@@ -113,6 +124,11 @@ export default function Player() {
          cameraPitch.current = Math.max(0.1, Math.min(1.2, 
            cameraPitch.current - e.movementY * 0.002
          ));
+         
+         if (!hasRotated.current) {
+           hasRotated.current = true;
+           useTutorialStore.getState().completeCondition('cameraRotated');
+         }
        }
      };
      
@@ -141,22 +157,27 @@ export default function Player() {
        };
      };
      
-     const handleTouchMove = (e) => {
-       if (!touchStartRef.current) return;
-       
-       const dx = e.touches[0].clientX - touchStartRef.current.x;
-       const dy = e.touches[0].clientY - touchStartRef.current.y;
-       
-       cameraAngle.current -= dx * 0.002;
-       cameraPitch.current = Math.max(0.1, Math.min(1.2, 
-         cameraPitch.current - dy * 0.002
-       ));
-       
-       touchStartRef.current = {
-         x: e.touches[0].clientX,
-         y: e.touches[0].clientY
-       };
-     };
+      const handleTouchMove = (e) => {
+        if (!touchStartRef.current) return;
+        
+        const dx = e.touches[0].clientX - touchStartRef.current.x;
+        const dy = e.touches[0].clientY - touchStartRef.current.y;
+        
+        cameraAngle.current -= dx * 0.002;
+        cameraPitch.current = Math.max(0.1, Math.min(1.2, 
+          cameraPitch.current - dy * 0.002
+        ));
+        
+        if (!hasRotated.current) {
+          hasRotated.current = true;
+          useTutorialStore.getState().completeCondition('cameraRotated');
+        }
+        
+        touchStartRef.current = {
+          x: e.touches[0].clientX,
+          y: e.touches[0].clientY
+        };
+      };
      
      const handleTouchEnd = () => {
        touchStartRef.current = null;
@@ -210,12 +231,17 @@ export default function Player() {
     if (keys.current.left) moveDirection.x -= 1;
     if (keys.current.right) moveDirection.x += 1;
     
-    const isMoving = moveDirection.length() > 0;
-    const isRunning = keys.current.run && isMoving;
-    setIsMoving(isMoving);
-    setIsRunning(isRunning);
-    setIsMovingLocal(isMoving);
-    setIsRunningLocal(isRunning);
+     const isMoving = moveDirection.length() > 0;
+     const isRunning = keys.current.run && isMoving;
+     setIsMoving(isMoving);
+     setIsRunning(isRunning);
+     setIsMovingLocal(isMoving);
+     setIsRunningLocal(isRunning);
+     
+     if (isMoving && !hasMoved.current) {
+       hasMoved.current = true;
+       useTutorialStore.getState().completeCondition('playerMoved');
+     }
     
     const eventEffects = getEventEffects();
     
@@ -264,6 +290,11 @@ export default function Player() {
     
     if (keys.current.jump && currentPos.y <= groundLevel + 0.1) {
       velocityY.current = JUMP_FORCE;
+      
+      if (!hasJumped.current) {
+        hasJumped.current = true;
+        useTutorialStore.getState().completeCondition('playerJumped');
+      }
     }
     
     velocityY.current -= GRAVITY * delta;

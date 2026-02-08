@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { playSound } from '../systems/SoundManager';
+import { useAchievementStore } from './achievementStore';
 
 export const WEAPONS = {
   FIST: { name: '주먹', damage: 5, range: 1.5, cooldown: 0.5 },
@@ -7,6 +8,7 @@ export const WEAPONS = {
   STONE_AXE: { name: '돌도끼', damage: 20, range: 2.5, cooldown: 0.6 },
   SPEAR: { name: '창', damage: 25, range: 3, cooldown: 0.7 },
   TORCH: { name: '횃불', damage: 15, range: 2, cooldown: 0.5, fireDamage: 5 },
+  REINFORCED_AXE: { name: '강화 도끼', damage: 35, range: 2.5, cooldown: 0.5 },
 };
 
 const COMBO_WINDOW_MS = 1000;
@@ -41,29 +43,35 @@ export const usePlayerStore = create((set, get) => ({
   setIsJumping: (isJumping) => set({ isJumping }),
   setVelocity: (velocity) => set({ velocity }),
   
-  attack: () => {
-    const state = get();
-    const now = Date.now();
-    const weapon = WEAPONS[state.currentWeapon];
-    
-    if (state.attackCooldown > 0) return false;
-    
-    const timeSinceLastAttack = now - state.lastAttackTime;
-    const isComboHit = timeSinceLastAttack < COMBO_WINDOW_MS;
-    const newCombo = isComboHit ? Math.min(state.comboCount + 1, MAX_COMBO) : 1;
-    
-    set({ 
-      isAttacking: true, 
-      attackCooldown: weapon.cooldown,
-      comboCount: newCombo,
-      lastAttackTime: now,
-    });
-    
-    playSound('attack_swing');
-    setTimeout(() => set({ isAttacking: false }), ATTACK_ANIMATION_MS);
-    
-    return true;
-  },
+   attack: () => {
+     const state = get();
+     const now = Date.now();
+     const weapon = WEAPONS[state.currentWeapon];
+     
+     if (state.attackCooldown > 0) return false;
+     
+     const timeSinceLastAttack = now - state.lastAttackTime;
+     const isComboHit = timeSinceLastAttack < COMBO_WINDOW_MS;
+     const newCombo = isComboHit ? Math.min(state.comboCount + 1, MAX_COMBO) : 1;
+     
+     set({ 
+       isAttacking: true, 
+       attackCooldown: weapon.cooldown,
+       comboCount: newCombo,
+       lastAttackTime: now,
+     });
+     
+     // maxCombo 업데이트
+     const currentMax = useAchievementStore.getState().stats.maxCombo;
+     if (newCombo > currentMax) {
+       useAchievementStore.getState().updateStat('maxCombo', newCombo);
+     }
+     
+     playSound('attack_swing');
+     setTimeout(() => set({ isAttacking: false }), ATTACK_ANIMATION_MS);
+     
+     return true;
+   },
   
   updateCooldown: (delta) => set((state) => ({
     attackCooldown: Math.max(0, state.attackCooldown - delta),
@@ -84,10 +92,17 @@ export const usePlayerStore = create((set, get) => ({
     return WEAPONS[state.currentWeapon].range;
   },
   
-  damage: (amount) => {
-    playSound('player_hurt');
-    set((state) => ({ health: Math.max(0, state.health - amount) }));
-  },
+   damage: (amount) => {
+     playSound('player_hurt');
+     set((state) => {
+       const newHealth = Math.max(0, state.health - amount);
+       // HP 10% 이하 생존 체크
+       if (newHealth > 0 && newHealth <= 10) {
+         useAchievementStore.getState().updateStat('survivedLowHealth', true);
+       }
+       return { health: newHealth };
+     });
+   },
   heal: (amount) => set((state) => ({ 
     health: Math.min(100, state.health + amount) 
   })),

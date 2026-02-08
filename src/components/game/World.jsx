@@ -1,6 +1,6 @@
 import { COLORS } from '../../data/config';
 import Terrain from './Terrain';
-import Forest from './Forest';
+import InstancedForest from './InstancedForest';
 import Rocks from './Rocks';
 import Base from './Base';
 import AntNest from './AntNest';
@@ -11,6 +11,7 @@ import NightSpawner from './NightSpawner';
 import BossSpawner from './BossSpawner';
 import DamageNumbers from './DamageNumbers';
 import EventEffects from './EventEffects';
+import PostProcessing from '../effects/PostProcessing';
 
 export default function World() {
   return (
@@ -22,7 +23,7 @@ export default function World() {
       <fog attach="fog" args={[COLORS.sky_day, 30, 100]} />
        
       <Terrain />
-      <Forest />
+      <InstancedForest />
       <Rocks />
       <Base />
       <AntNest />
@@ -31,6 +32,7 @@ export default function World() {
       <BossSpawner />
       <DamageNumbers />
       <Player />
+      <PostProcessing />
     </>
   );
 }

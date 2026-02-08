@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background - Dark forest green circle -->
+  <circle cx="256" cy="256" r="256" fill="#1a2f1a"/>
+  
+  <!-- Moon/Night sky accent -->
+  <circle cx="380" cy="120" r="40" fill="#f4e99b" opacity="0.9"/>
+  
+  <!-- Pine Tree 1 (left, smaller) -->
+  <polygon points="120,380 180,380 150,280" fill="#2d5a2d"/>
+  <polygon points="125,300 175,300 150,220" fill="#3d7a3d"/>
+  <polygon points="130,240 170,240 150,170" fill="#4d9a4d"/>
+  <rect x="145" y="380" width="10" height="30" fill="#5d3a1a"/>
+  
+  <!-- Pine Tree 2 (center, largest) -->
+  <polygon points="200,400 320,400 260,260" fill="#2d5a2d"/>
+  <polygon points="210,290 310,290 260,180" fill="#3d7a3d"/>
+  <polygon points="220,210 300,210 260,110" fill="#4d9a4d"/>
+  <rect x="250" y="400" width="20" height="40" fill="#5d3a1a"/>
+  
+  <!-- Pine Tree 3 (right, medium) -->
+  <polygon points="340,390 420,390 380,270" fill="#2d5a2d"/>
+  <polygon points="348,295 412,295 380,200" fill="#3d7a3d"/>
+  <polygon points="355,225 405,225 380,145" fill="#4d9a4d"/>
+  <rect x="372" y="390" width="16" height="35" fill="#5d3a1a"/>
+  
+  <!-- "99" text -->
+  <text x="256" y="470" font-family="Arial Black, sans-serif" font-size="80" font-weight="bold" fill="#f4e99b" text-anchor="middle">99</text>
+  
+  <!-- Ground/grass line -->
+  <ellipse cx="256" cy="430" rx="200" ry="15" fill="#1a3f1a" opacity="0.5"/>
+</svg>
