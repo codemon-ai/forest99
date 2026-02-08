@@ -17,7 +17,7 @@ Gather resources during the day, and survive monsters at night!
 
 ## 🎨 Origin
 
-This game started from a 7-year-old's idea.
+This game started from a 9-year-old's idea.
 
 ### Original Design Document
 
