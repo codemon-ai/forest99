@@ -13,8 +13,22 @@ import { getTerrainHeight, getRandomPosition } from '../../utils/noise';
 import { GAME_CONFIG } from '../../data/config';
 
 const MAX_MONSTERS = 20;
-const SPAWN_INTERVAL = 10;
+const SPAWN_INTERVAL = 8;
 const BASE_RADIUS = 15;
+const INITIAL_SPAWN_COUNT = 5;
+
+const DAY_MONSTERS = [
+  MONSTER_TYPES.SNAKE,
+  MONSTER_TYPES.MONKEY,
+  MONSTER_TYPES.BEAR,
+  MONSTER_TYPES.FIRE_ANT,
+];
+
+const NIGHT_MONSTERS = [
+  MONSTER_TYPES.SNAKE,
+  MONSTER_TYPES.MONKEY,
+  MONSTER_TYPES.BEAR,
+];
 
 const MONSTER_COMPONENTS = {
   [MONSTER_TYPES.SNAKE]: { component: Snake, healthBarHeight: 1.5 },
@@ -28,50 +42,58 @@ export default function MonsterSpawner() {
   const isNight = useGameStore((state) => state.isNight);
   const playerPosition = usePlayerStore((state) => state.position);
   const spawnTimer = useRef(0);
+  const initialSpawnDone = useRef(false);
+  
+  const createMonster = useCallback((type) => {
+    let position;
+    let attempts = 0;
+    
+    do {
+      position = getRandomPosition(GAME_CONFIG.worldSize, 10);
+      const distFromBase = Math.sqrt(position[0] ** 2 + position[2] ** 2);
+      attempts++;
+      if (distFromBase >= BASE_RADIUS) break;
+    } while (attempts < 20);
+    
+    const height = getTerrainHeight(position[0], position[2]);
+    position[1] = height;
+    
+    return {
+      id: `monster-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      type,
+      position,
+      stats: MONSTER_STATS[type],
+      hp: MONSTER_STATS[type].hp,
+      state: AI_STATES.WANDER,
+      wanderTarget: null,
+    };
+  }, []);
   
   const handleMonsterDeath = useCallback((id) => {
     setMonsters((prev) => prev.filter((m) => m.id !== id));
   }, []);
   
   useFrame((_, delta) => {
+    if (!initialSpawnDone.current) {
+      initialSpawnDone.current = true;
+      const initialMonsters = [];
+      for (let i = 0; i < INITIAL_SPAWN_COUNT; i++) {
+        const type = DAY_MONSTERS[Math.floor(Math.random() * DAY_MONSTERS.length)];
+        initialMonsters.push(createMonster(type));
+      }
+      setMonsters(initialMonsters);
+      return;
+    }
+    
     spawnTimer.current += delta;
     
     if (spawnTimer.current >= SPAWN_INTERVAL) {
       spawnTimer.current = 0;
       
-      if (monsters.length < MAX_MONSTERS && !isNight) {
-        const types = [
-          MONSTER_TYPES.SNAKE,
-          MONSTER_TYPES.MONKEY,
-          MONSTER_TYPES.BEAR,
-          MONSTER_TYPES.FIRE_ANT,
-        ];
+      if (monsters.length < MAX_MONSTERS) {
+        const types = isNight ? NIGHT_MONSTERS : DAY_MONSTERS;
         const type = types[Math.floor(Math.random() * types.length)];
-        
-        let position;
-        let attempts = 0;
-        
-        do {
-          position = getRandomPosition(GAME_CONFIG.worldSize, 10);
-          const distFromBase = Math.sqrt(position[0] ** 2 + position[2] ** 2);
-          attempts++;
-          if (distFromBase >= BASE_RADIUS) break;
-        } while (attempts < 20);
-        
-        const height = getTerrainHeight(position[0], position[2]);
-        position[1] = height;
-        
-        const newMonster = {
-          id: `monster-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-          type,
-          position,
-          stats: MONSTER_STATS[type],
-          hp: MONSTER_STATS[type].hp,
-          state: AI_STATES.WANDER,
-          wanderTarget: null,
-        };
-        
-        setMonsters((prev) => [...prev, newMonster]);
+        setMonsters((prev) => [...prev, createMonster(type)]);
       }
     }
     
