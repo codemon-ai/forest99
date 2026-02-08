@@ -12,10 +12,11 @@ import { updateMonsterAI, AI_STATES } from '../../systems/AISystem';
 import { getTerrainHeight, getRandomPosition } from '../../utils/noise';
 import { GAME_CONFIG } from '../../data/config';
 
-const MAX_MONSTERS = 20;
-const SPAWN_INTERVAL = 8;
-const BASE_RADIUS = 15;
-const INITIAL_SPAWN_COUNT = 5;
+const MAX_MONSTERS = 25;
+const SPAWN_INTERVAL = 6;
+const BASE_RADIUS = 10;
+const INITIAL_SPAWN_COUNT = 15;
+const SPAWN_RANGE = 50;
 
 const DAY_MONSTERS = [
   MONSTER_TYPES.SNAKE,
@@ -49,7 +50,7 @@ export default function MonsterSpawner() {
     let attempts = 0;
     
     do {
-      position = getRandomPosition(GAME_CONFIG.worldSize, 10);
+      position = getRandomPosition(SPAWN_RANGE, 5);
       const distFromBase = Math.sqrt(position[0] ** 2 + position[2] ** 2);
       attempts++;
       if (distFromBase >= BASE_RADIUS) break;
