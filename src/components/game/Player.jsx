@@ -47,6 +47,7 @@ export default function Player() {
   
   const getClosestMonsterInRange = useCombatStore((state) => state.getClosestMonsterInRange);
   const damageMonster = useCombatStore((state) => state.damageMonster);
+  const setCurrentTarget = useCombatStore((state) => state.setCurrentTarget);
   
   const findNearestResource = useResourceStore((state) => state.findNearestResource);
   const harvestResource = useResourceStore((state) => state.harvestResource);
@@ -91,9 +92,10 @@ export default function Player() {
     
     const target = getClosestMonsterInRange(playerPos, range, playerFacing.current);
     if (target) {
+      setCurrentTarget(target.id);
       damageMonster(target.id, damage, playerPos);
     }
-  }, [attack, getAttackRange, getAttackDamage, getClosestMonsterInRange, damageMonster]);
+  }, [attack, getAttackRange, getAttackDamage, getClosestMonsterInRange, damageMonster, setCurrentTarget]);
   
   const handleHarvest = useCallback(() => {
     if (!groupRef.current) return;

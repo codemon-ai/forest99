@@ -2,7 +2,9 @@ import { usePlayerStore, WEAPONS } from '../../stores/playerStore';
 import { useGameStore } from '../../stores/gameStore';
 import { useResourceStore } from '../../stores/resourceStore';
 import { useInventoryStore } from '../../stores/inventoryStore';
+import { useCombatStore } from '../../stores/combatStore';
 import { ITEMS } from '../../data/items';
+import { MONSTER_STATS } from '../../data/monsters';
 import './HUD.css';
 
 function StatBar({ value, maxValue, color, label }) {
@@ -84,6 +86,27 @@ function QuickInventory({ slots }) {
   );
 }
 
+function TargetMonster({ monster }) {
+  if (!monster || monster.isDead) return null;
+  
+  const stats = MONSTER_STATS[monster.type];
+  const hpPercent = (monster.hp / monster.maxHp) * 100;
+  const name = stats?.name || monster.type;
+  
+  return (
+    <div className="target-monster">
+      <div className="target-name">{name}</div>
+      <div className="target-hp-bar">
+        <div 
+          className="target-hp-fill" 
+          style={{ width: `${hpPercent}%` }}
+        />
+      </div>
+      <div className="target-hp-text">{monster.hp} / {monster.maxHp}</div>
+    </div>
+  );
+}
+
 export default function HUD() {
   const health = usePlayerStore((state) => state.health);
   const hunger = usePlayerStore((state) => state.hunger);
@@ -94,9 +117,15 @@ export default function HUD() {
   const isNight = useGameStore((state) => state.isNight);
   const nearbyResource = useResourceStore((state) => state.nearbyResource);
   const slots = useInventoryStore((state) => state.slots);
+  const currentTarget = useCombatStore((state) => state.currentTarget);
+  const targetMonster = useCombatStore((state) => state.monsters[state.currentTarget]);
   
   return (
     <div className="hud">
+      <div className="hud-top-center">
+        <TargetMonster monster={targetMonster} />
+      </div>
+      
       <div className="hud-top-left">
         <div className="day-counter">
           Day {day} {isNight ? '🌙' : '☀️'}

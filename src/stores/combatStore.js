@@ -7,6 +7,10 @@ import { useGameStore } from './gameStore';
 export const useCombatStore = create((set, get) => ({
   monsters: {},
   damageNumbers: [],
+  currentTarget: null,
+  
+  setCurrentTarget: (targetId) => set({ currentTarget: targetId }),
+  clearCurrentTarget: () => set({ currentTarget: null }),
   
   registerMonster: (id, type, position) => set((state) => ({
     monsters: {
@@ -58,24 +62,25 @@ export const useCombatStore = create((set, get) => ({
        damageNumbers: [...state.damageNumbers, damageNumber]
      }));
      
-     playSound('attack_hit');
-     if (isDead) {
-       playSound('monster_death');
-       
-       // 몬스터 킬 카운트
-       useAchievementStore.getState().incrementStat('monstersKilled');
-       
-       // 밤에 킬한 경우
-       const isNight = useGameStore.getState().isNight;
-       if (isNight) {
-         useAchievementStore.getState().incrementStat('nightKills');
-       }
-       
-       // 보스 킬
-       if (monster.type === 'boss') {
-         useAchievementStore.getState().updateStat('bossDefeated', true);
-       }
-     }
+      playSound('attack_hit');
+      if (isDead) {
+        playSound('monster_death');
+        
+        if (state.currentTarget === id) {
+          set({ currentTarget: null });
+        }
+        
+        useAchievementStore.getState().incrementStat('monstersKilled');
+        
+        const isNight = useGameStore.getState().isNight;
+        if (isNight) {
+          useAchievementStore.getState().incrementStat('nightKills');
+        }
+        
+        if (monster.type === 'boss') {
+          useAchievementStore.getState().updateStat('bossDefeated', true);
+        }
+      }
      
      setTimeout(() => {
        set((state) => ({

@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { useCombatStore } from '../../stores/combatStore';
 import { useInventoryStore } from '../../stores/inventoryStore';
@@ -29,7 +29,6 @@ export default function MonsterWrapper({
   healthBarHeight = 2 
 }) {
   const groupRef = useRef();
-  const [localPosition, setLocalPosition] = useState(position);
   const hitFlash = useRef(0);
   const droppedLoot = useRef(false);
   
@@ -57,6 +56,12 @@ export default function MonsterWrapper({
     }
   }, [monsterData?.isDead, id, type, onDeath, generateMonsterDrops]);
   
+  useEffect(() => {
+    if (groupRef.current && position) {
+      groupRef.current.position.set(position[0], position[1], position[2]);
+    }
+  }, [position]);
+  
   useFrame((_, delta) => {
     if (!groupRef.current) return;
     
@@ -79,7 +84,7 @@ export default function MonsterWrapper({
   const showHealthBar = monsterData.hp < monsterData.maxHp && !monsterData.isDead;
   
   return (
-    <group ref={groupRef} position={localPosition}>
+    <group ref={groupRef} position={position}>
       {showHealthBar && (
         <HealthBar 
           hp={monsterData.hp} 
