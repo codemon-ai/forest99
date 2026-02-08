@@ -1,5 +1,7 @@
 # 🌲 숲에서 보낸 99일 밤 (99 Nights in the Forest)
 
+[![English](https://img.shields.io/badge/lang-English-blue.svg)](README.en.md)
+
 > 99일간 숲에서 살아남아 숲의 수호자를 물리쳐라!
 
 Three.js + React 기반 로우폴리 생존 게임입니다.
@@ -19,8 +21,10 @@ Three.js + React 기반 로우폴리 생존 게임입니다.
 
 ### 초기 기획서
 
-<!-- 초기 기획서 이미지를 여기에 추가하세요 -->
-![초기 기획서](docs/images/original-plan.jpg)
+<p align="center">
+  <img src="docs/images/original-plan-1.jpg" width="45%" alt="초기 기획서 1" />
+  <img src="docs/images/original-plan-2.jpg" width="45%" alt="초기 기획서 2" />
+</p>
 
 ## ✨ 주요 기능
 
